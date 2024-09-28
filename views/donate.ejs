@@ -1,0 +1,70 @@
+<!-- views/donate.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donate Clothes & Accessories</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto p-4">
+        <h1 class="text-4xl font-bold mb-6 text-center">Donate Your Old Clothes & Accessories</h1>
+
+        <!-- Form for choosing donation items -->
+        <form id="donationForm" class="bg-white p-6 rounded shadow-md mb-8">
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2">Items to Donate:</label>
+                <select class="block w-full bg-gray-200 border border-gray-200 rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="item" name="item">
+                    <option value="clothes">Clothes</option>
+                    <option value="accessories">Accessories</option>
+                </select>
+            </div>
+            <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Find Nearby Orphanages</button>
+        </form>
+
+        <!-- Location and orphanages list -->
+        <div id="orphanagesList" class="hidden">
+            <h2 class="text-2xl font-semibold mb-4">Nearby Orphanages</h2>
+            <ul class="space-y-4" id="orphanageResults">
+                <!-- Orphanage data will be inserted here dynamically -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('donationForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            // Ask for user's location
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(async function (position) {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+
+                    // Fetch orphanage data from the server
+                    const response = await fetch(`/api/orphanages?lat=${latitude}&lng=${longitude}`);
+                    const orphanages = await response.json();
+
+                    const orphanageResults = document.getElementById('orphanageResults');
+                    orphanageResults.innerHTML = ''; // Clear previous results
+
+                    // Display orphanages
+                    orphanages.forEach(orphanage => {
+                        const li = document.createElement('li');
+                        li.className = 'bg-white p-4 rounded shadow';
+                        li.innerHTML = `<strong>${orphanage.name}</strong><br>${orphanage.address}`;
+                        orphanageResults.appendChild(li);
+                    });
+
+                    document.getElementById('orphanagesList').classList.remove('hidden');
+                });
+            } else {
+                alert('Geolocation is not supported by your browser.');
+            }
+        });
+    </script>
+
+</body>
+</html>

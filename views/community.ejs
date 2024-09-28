@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Engagement</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-gradient-to-r from-blue-600 to-blue-800 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="shrink-0">
+                        <img class="h-10 w-auto" src="logo.png" alt="Logo">
+                    </div>
+                    <div class="ml-10 space-x-8 hidden sm:flex">
+                        <a href="/" class="nav-link text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                        <a href="/wardrobe" class="nav-link text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Your Collections</a>
+                        <a href="/community" class="nav-link text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Community Engage</a>
+                        <a href="/logout" class="bg-white text-blue-600 hover:bg-blue-500 hover:text-white border border-white px-4 py-2 rounded-md text-sm font-medium">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <h1 class="text-3xl font-bold mb-6">Community Engagement</h1>
+
+        <!-- Post Form -->
+        <% if (user) { %>
+        <form action="/community/post" method="POST" class="mb-8">
+            <textarea name="text" rows="3" placeholder="Share something with the community..." class="w-full border border-gray-300 p-2 rounded-md" required></textarea>
+            <button type="submit" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-md">Post</button>
+        </form>
+        <% } else { %>
+        <p class="mb-4">Please <a href="/login" class="text-blue-600">log in</a> to post.</p>
+        <% } %>
+
+        <!-- Posts Section -->
+        <div>
+            <% posts.forEach(post => { %>
+            <div class="bg-white p-4 mb-4 rounded-md shadow-md">
+                <div class="flex justify-between items-center">
+                    <span class="font-semibold"><%= post.username %></span>
+                    <span class="text-gray-500 text-sm"><%= new Date(post.createdAt).toLocaleString() %></span>
+                </div>
+                <p class="mt-2"><%= post.text %></p>
+
+                <!-- Replies -->
+                <div class="mt-4">
+                    <h3 class="font-semibold">Replies:</h3>
+                    <% post.replies.forEach(reply => { %>
+                    <div class="ml-4 mt-2">
+                        <span class="font-semibold"><%= reply.username %></span>: <%= reply.text %>
+                    </div>
+                    <% }); %>
+                </div>
+
+                <% if (user) { %>
+                <!-- Reply Form -->
+                <form action="/community/reply/<%= post._id %>" method="POST" class="mt-4">
+                    <input type="text" name="text" placeholder="Reply..." class="w-full border border-gray-300 p-2 rounded-md" required>
+                    <button type="submit" class="mt-2 bg-blue-600 text-white px-4 py-2 rounded-md">Reply</button>
+                </form>
+                <% } %>
+            </div>
+            <% }); %>
+        </div>
+    </main>
+
+    <footer class="bg-white shadow-md py-8 w-full">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center">
+                <p class="text-gray-500">© 2024 DressUp. All rights reserved.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-500 hover:text-blue-500">Privacy Policy</a>
+                    <a href="#" class="text-gray-500 hover:text-blue-500">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

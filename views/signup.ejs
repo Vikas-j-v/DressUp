@@ -7,7 +7,11 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
-
+    <% if (typeof error !== 'undefined') { %>
+        <script>
+            alert('<%= error %>');
+        </script>
+    <% } %>
     <!-- Sign Up Page Container -->
     <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div class="max-w-md w-full space-y-8">
@@ -17,8 +21,8 @@
                 </h2>
                 <p class="mt-2 text-center text-sm text-gray-600">
                     Or 
-                    <a href="#" class="font-medium text-blue-600 hover:text-blue-500">
-                        sign up with Google
+                    <a href="/login" class="font-medium text-blue-600 hover:text-blue-500">
+                        Have account? Login here
                     </a>
                 </p>
             </div>

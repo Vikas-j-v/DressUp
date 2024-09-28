@@ -5,9 +5,11 @@ const userSchema = new mongoose.Schema({
     username: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    dresses: { type: [String], required:true, default: [] },
+    Topwear: { type: [String], required:true, default: [] },
+    Bottomwear: { type: [String], required:true, default: [] },
     accessories: { type: [String], required:true, default: [] },
-    personalItems: { type: [String], required:true, default: [] }
+    personalItems: { type: [String], required:true, default: [] },
+    favorites: { type: [String], required: true, default: [] }
 });
 
 userSchema.methods.matchPassword = async function (enteredPassword) {

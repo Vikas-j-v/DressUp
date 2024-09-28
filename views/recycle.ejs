@@ -1,0 +1,98 @@
+<!-- recycle.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recycle Tips</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+    <style>
+        .nav-link {
+            transition: color 0.3s, background-color 0.3s;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+</style>
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="shrink-0">
+                        <img class="h-10 w-auto" src="logo.png" alt="Logo">
+                    </div>
+                    <div class="ml-10 space-x-8 hidden sm:flex">
+                        <a href="/" class="nav-link text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium font-bold">Home</a>
+                        <a href="/wardrobe" class="nav-link text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium font-bold">Your Collections</a>
+                        <a href="/community" class="nav-link text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium font-bold">Community Engage</a>
+                        <a href="/donate" class="nav-link text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium font-bold">Donate</a>
+                        <a href="/eco-friendly" class="nav-link text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium font-bold">Eco-Friendly</a>
+                        <a href="/reuse" class="nav-link text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium font-bold">Reuse</a>
+                    </div>
+                </div>
+                <div class="hidden sm:flex sm:items-center">
+                    <% if (user) { %> 
+                        <span class="text-gray-200 px-3 py-2 rounded-md text-sm font-medium font-bold">Hello, <%= user.username %></span>
+                        <a href="/logout" class="bg-white text-blue-600 hover:bg-blue-500 hover:text-white border border-white px-4 py-2 rounded-md text-sm font-medium ml-4 transition font-bold">Logout</a>
+                    <% } else { %>
+                        <a href="/login" class="bg-white text-blue-600 hover:bg-blue-500 hover:text-white border border-white px-4 py-2 rounded-md text-sm font-medium font-bold">Login</a>
+                        <a href="/signup" class="ml-4 bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium font-bold">Sign Up</a>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl mx-auto py-8 px-4">
+        <h1 class="text-3xl font-bold text-blue-600 mb-6">Recycle Tips</h1>
+        <p class="text-lg text-gray-700 mb-6">
+            Discover how to recycle your items and find nearby factories that accept them.
+        </p>
+
+        <section class="mb-8">
+            <h2 class="text-2xl font-semibold text-blue-500 mb-4">Recycling Tips</h2>
+            <ul class="list-disc list-inside">
+                <li class="mb-2">Separate recyclables: Keep items like plastic, metal, and paper separate.</li>
+                <li class="mb-2">Clean and dry recyclables to prevent contamination.</li>
+                <li class="mb-2">Check local guidelines for recycling rules and regulations.</li>
+                <li class="mb-2">Consider donating items that are still usable instead of recycling.</li>
+                <li class="mb-2">Participate in community recycling programs and events.</li>
+            </ul>
+        </section>
+
+        <section class="mb-8">
+            <h2 class="text-2xl font-semibold text-blue-500 mb-4">Nearby Recycling Factories</h2>
+            <div id="recycling-factories" class="bg-white rounded-lg shadow-md p-4">
+                <!-- Recycling factories will be dynamically inserted here -->
+                <ul id="factory-list" class="list-disc list-inside">
+                    <% if (factories.length > 0) { %>
+                        <% factories.forEach(factory => { %>
+                            <li class="mb-2">
+                                <strong><%= factory.name %></strong><br>
+                                Address: <%= factory.address %><br>
+                                Contact: <%= factory.contact %>
+                            </li>
+                        <% }); %>
+                    <% } else { %>
+                        <li>No nearby recycling factories found.</li>
+                    <% } %>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-4">
+        <div class="max-w-7xl mx-auto text-center">
+            <p>© 2024 Your Website. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

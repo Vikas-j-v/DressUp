@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wardrobe</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Toastr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastr@latest/toastr.min.css">
+    <!-- Toastr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/toastr@latest/toastr.min.js"></script>
 </head>
 <body class="bg-gray-100">
 
@@ -23,18 +27,56 @@
     <section class="container mx-auto py-12 px-4">
         <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">Your Wardrobe</h1>
 
-        <!-- Dresses Section -->
+        <!-- Outfit of the Day Section -->
         <div class="mb-8">
-            <h2 class="text-2xl font-semibold text-gray-700 mb-4">Dresses</h2>
+            <h2 class="text-2xl font-semibold text-gray-700 mb-4">Outfit of the Day</h2>
+            <div id="ootd" class="bg-white shadow-md rounded-md p-4 text-center">
+                <p class="text-lg font-medium text-gray-700">Select items to create your outfit!</p>
+            </div>
+        </div>
+
+        <!-- Favorite Items Section -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-semibold text-gray-700 mb-4">Favorite Items</h2>
+            <div id="favorites" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <p class="text-gray-500">No favorite items yet.</p>
+            </div>
+        </div>
+
+        <!-- Topwear Section -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-semibold text-gray-700 mb-4">Topwear</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                <% if (user.dresses.length > 0) { %>
-                    <% user.dresses.forEach(function(dress) { %>
-                        <div class="bg-white shadow-md rounded-md p-4">
-                            <h3 class="text-lg font-medium text-gray-700"><%= dress %></h3>
+                <% if (user.Topwear.length > 0) { %>
+                    <% user.Topwear.forEach(function(topwear, index) { %>
+                        <div class="bg-white shadow-md rounded-md p-4" id="topwear-<%= index %>">
+                            <h3 class="text-lg font-medium text-gray-700"><%= topwear %></h3>
+                            <button class="mt-2 bg-blue-600 text-white px-2 py-1 rounded" onclick="suggestOutfit('<%= topwear %>', 'topwear')">Select</button>
+                            <button class="mt-2 bg-yellow-500 text-white px-2 py-1 rounded" onclick="addToFavorites('<%= topwear %>', 'topwear')">Favorite</button>
+                            <button class="mt-2 bg-red-600 text-white px-2 py-1 rounded" onclick="removeItem('topwear-<%= index %>')">Remove</button>
                         </div>
                     <% }) %>
                 <% } else { %>
-                    <p class="text-gray-500">No dresses added yet.</p>
+                    <p class="text-gray-500">No Topwear added yet.</p>
+                <% } %>
+            </div>
+        </div>
+
+        <!-- Bottomwear Section -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-semibold text-gray-700 mb-4">Bottomwear</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <% if (user.Bottomwear.length > 0) { %>
+                    <% user.Bottomwear.forEach(function(bottomwear, index) { %>
+                        <div class="bg-white shadow-md rounded-md p-4" id="bottomwear-<%= index %>">
+                            <h3 class="text-lg font-medium text-gray-700"><%= bottomwear %></h3>
+                            <button class="mt-2 bg-blue-600 text-white px-2 py-1 rounded" onclick="suggestOutfit('<%= bottomwear %>', 'bottomwear')">Select</button>
+                            <button class="mt-2 bg-yellow-500 text-white px-2 py-1 rounded" onclick="addToFavorites('<%= bottomwear %>', 'bottomwear')">Favorite</button>
+                            <button class="mt-2 bg-red-600 text-white px-2 py-1 rounded" onclick="removeItem('bottomwear-<%= index %>')">Remove</button>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <p class="text-gray-500">No Bottomwear added yet.</p>
                 <% } %>
             </div>
         </div>
@@ -44,9 +86,12 @@
             <h2 class="text-2xl font-semibold text-gray-700 mb-4">Accessories</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <% if (user.accessories.length > 0) { %>
-                    <% user.accessories.forEach(function(accessory) { %>
-                        <div class="bg-white shadow-md rounded-md p-4">
+                    <% user.accessories.forEach(function(accessory, index) { %>
+                        <div class="bg-white shadow-md rounded-md p-4" id="accessory-<%= index %>">
                             <h3 class="text-lg font-medium text-gray-700"><%= accessory %></h3>
+                            <button class="mt-2 bg-blue-600 text-white px-2 py-1 rounded" onclick="suggestOutfit('<%= accessory %>', 'accessory')">Select</button>
+                            <button class="mt-2 bg-yellow-500 text-white px-2 py-1 rounded" onclick="addToFavorites('<%= accessory %>', 'accessory')">Favorite</button>
+                            <button class="mt-2 bg-red-600 text-white px-2 py-1 rounded" onclick="removeItem('accessory-<%= index %>')">Remove</button>
                         </div>
                     <% }) %>
                 <% } else { %>
@@ -60,16 +105,18 @@
             <h2 class="text-2xl font-semibold text-gray-700 mb-4">Personal Items</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <% if (user.personalItems.length > 0) { %>
-                    <% user.personalItems.forEach(function(item) { %>
-                        <div class="bg-white shadow-md rounded-md p-4">
+                    <% user.personalItems.forEach(function(item, index) { %>
+                        <div class="bg-white shadow-md rounded-md p-4" id="personal-<%= index %>">
                             <h3 class="text-lg font-medium text-gray-700"><%= item %></h3>
+                            <button class="mt-2 bg-blue-600 text-white px-2 py-1 rounded" onclick="suggestOutfit('<%= item %>', 'personal')">Select</button>
+                            <button class="mt-2 bg-yellow-500 text-white px-2 py-1 rounded" onclick="addToFavorites('<%= item %>', 'personal')">Favorite</button>
+                            <button class="mt-2 bg-red-600 text-white px-2 py-1 rounded" onclick="removeItem('personal-<%= index %>')">Remove</button>
                         </div>
                     <% }) %>
                 <% } else { %>
                     <p class="text-gray-500">No personal items added yet.</p>
                 <% } %>
             </div>
-
         </div>
     </section>
 
@@ -79,6 +126,72 @@
             <p class="text-gray-600">© 2024 DressUp. All rights reserved.</p>
         </div>
     </footer>
+
+    <script>
+        let selectedItems = {
+            topwear: null,
+            bottomwear: null,
+            accessory: null,
+            personal: null
+        };
+
+        let favorites = [];
+
+        function suggestOutfit(item, type) {
+            if (type === 'topwear') {
+                selectedItems.topwear = item;
+            } else if (type === 'bottomwear') {
+                selectedItems.bottomwear = item;
+            } else if (type === 'accessory') {
+                selectedItems.accessory = item;
+            } else {
+                selectedItems.personal = item;
+            }
+            updateOOTD();
+        }
+
+        function updateOOTD() {
+            const ootd = document.getElementById('ootd');
+            let outfit = 'Outfit of the Day:';
+            if (selectedItems.topwear) {
+                outfit += `\nTopwear: ${selectedItems.topwear}`;
+            }
+            if (selectedItems.bottomwear) {
+                outfit += `\nBottomwear: ${selectedItems.bottomwear}`;
+            }
+            if (selectedItems.accessory) {
+                outfit += `\nAccessory: ${selectedItems.accessory}`;
+            }
+            if (selectedItems.personal) {
+                outfit += `\nPersonal Item: ${selectedItems.personal}`;
+            }
+            ootd.innerHTML = `<p class="text-lg font-medium text-gray-700">${outfit.replace(/\n/g, '<br>')}</p>`;
+        }
+
+        function addToFavorites(item, type) {
+            favorites.push({ item, type });
+            updateFavorites();
+            toastr.success(`${item} added to favorites!`);
+        }
+
+        function updateFavorites() {
+            const favoritesSection = document.getElementById('favorites');
+            favoritesSection.innerHTML = '';
+            favorites.forEach((favorite, index) => {
+                favoritesSection.innerHTML += `
+                    <div class="bg-white shadow-md rounded-md p-4" id="favorite-${index}">
+                        <h3 class="text-lg font-medium text-gray-700">${favorite.item}</h3>
+                        <p class="text-sm text-gray-500">Category: ${favorite.type}</p>
+                    </div>
+                `;
+            });
+        }
+
+        function removeItem(itemId) {
+            const itemElement = document.getElementById(itemId);
+            itemElement.remove();
+        }
+    </script>
 
 </body>
 </html>

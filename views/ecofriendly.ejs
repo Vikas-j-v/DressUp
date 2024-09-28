@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eco-Friendly Guide</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@1.2.0/dist/tailwind.min.css">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <h1 class="text-3xl font-bold mb-4">Eco-Friendly Guide</h1>
+        <p class="mb-6">Discover eco-friendly clothing, accessories, and recycling tips.</p>
+
+        <div id="chatbot" class="bg-white shadow p-4 rounded-lg mb-6">
+            <h2 class="text-xl font-semibold">Ask the Eco-Friendly Bot</h2>
+            <div id="chatbox" class="border border-gray-300 p-4 h-64 overflow-y-auto mb-4"></div>
+            <input id="userInput" type="text" placeholder="ex, clothing, accessories, recycle, electronics" class="border rounded p-2 w-full" />
+            <button id="sendBtn" class="bg-blue-500 text-white p-2 rounded">Send</button>
+        </div>
+
+        <h2 class="text-2xl font-semibold mb-2">Recycling and Reusing Tips</h2>
+        <ul class="list-disc pl-5">
+            <li>Donate old clothes and accessories to charity.</li>
+            <li>Turn old T-shirts into reusable bags.</li>
+            <li>Use electronics recycling programs to dispose of old devices.</li>
+            <li>Organize clothing swaps with friends.</li>
+        </ul>
+    </div>
+
+    <script>
+        const chatbox = document.getElementById('chatbox');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+
+        const ecoFriendlyItems = {
+            clothing: ["Organic cotton t-shirts", "Bamboo clothing", "Recycled polyester jackets"],
+            accessories: ["Recycled material bags", "Eco-friendly jewelry", "Sustainable sunglasses"],
+            electronics: ["Energy-efficient devices", "Solar chargers", "Refurbished gadgets"]
+        };
+
+        const recyclingTips = [
+            "Use old clothes as cleaning rags.",
+            "Make quilts from old T-shirts.",
+            "Donate electronics to local charities.",
+            "Check local recycling programs for electronics disposal."
+        ];
+
+        sendBtn.onclick = () => {
+            const input = userInput.value;
+            chatbox.innerHTML += `<div>User: ${input}</div>`;
+            userInput.value = '';
+
+            let response = "I’m not sure how to help with that.";
+            if (input.toLowerCase().includes("clothing")) {
+                response = "Here are some eco-friendly clothing options: " + ecoFriendlyItems.clothing.join(", ");
+            } else if (input.toLowerCase().includes("accessories")) {
+                response = "Check out these eco-friendly accessories: " + ecoFriendlyItems.accessories.join(", ");
+            } else if (input.toLowerCase().includes("electronics")) {
+                response = "Consider these eco-friendly electronics: " + ecoFriendlyItems.electronics.join(", ");
+            } else if (input.toLowerCase().includes("recycle")) {
+                response = "Here are some recycling tips: " + recyclingTips.join(", ");
+            }
+
+            chatbox.innerHTML += `<div>Bot: ${response}</div>`;
+            chatbox.scrollTop = chatbox.scrollHeight;
+        };
+    </script>
+</body>
+</html>
