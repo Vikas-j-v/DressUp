@@ -5,12 +5,14 @@ const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const session = require('express-session'); // Import express-session
+const axios = require('axios');
 
 dotenv.config();
 
 const app = express();
 const port = 3000;
 const User = require('./models/mongodb'); // Adjust the path as necessary
+const CommunityPost = require('./models/community');
 
 // Middleware for sessions
 app.use(session({
@@ -31,6 +33,14 @@ mongoose.connect('mongodb+srv://vikasjv68:Ziy9JYog3OYo3VCA@bitnbuild.vaee0.mongo
 })
 .then(() => console.log('MongoDB connected'))
 .catch((error) => console.log(error));
+
+
+app.use((req, res, next) => {
+  res.locals.message = req.session.message;
+  delete req.session.message; // Clear the message after it's used
+  next();
+});
+
 
 // Routes
 app.get('/', async (req, res) => {
@@ -53,7 +63,23 @@ app.get('/', async (req, res) => {
   }
 });
 
+app.get('/reuse', (req, res) =>{
+  res.render('reuse', { user: req.session.user });
+})
+const recyclingFactories = [
+  { name: 'Recycling Factory A', address: '123 Main St, City', contact: '(555) 123-4567' },
+  { name: 'Recycling Factory B', address: '456 Elm St, City', contact: '(555) 987-6543' },
+  { name: 'Recycling Factory C', address: '789 Oak St, City', contact: '(555) 555-5555' }
+];
+app.get('/recycle', (req, res) => {
+  // Get user location from request (this can be enhanced with actual geolocation)
+  const userLocation = { latitude: 0, longitude: 0 }; // Replace with real location fetching logic
 
+  // Filter nearby factories (mock logic, enhance with actual geolocation)
+  const nearbyFactories = recyclingFactories; // Here you could filter based on distance
+
+  res.render('recycle', { user: req.user, factories: nearbyFactories });
+});
 app.get('/login', (req, res) => {
     res.render("login");
 });
@@ -70,6 +96,13 @@ app.get('/wardrobe', (req, res) => {
   res.render('wardrobe', { user }); // Pass the user object to the view
 });
 
+app.get('/ecofriendly',(req, res) =>{
+  const user = req.session.user; // Retrieve the user from the session
+  if (!user) {
+    return res.redirect('/login'); // Redirect to login if not logged in
+    }
+    res.render('ecofriendly', { user }); // Pass the user object to the view
+    });
 
 // Signup Route (No Password Hashing)
 app.post('/signup', async (req, res) => {
@@ -105,11 +138,11 @@ app.post('/login', async (req, res) => {
   try {
       const user = await User.findOne({ email });
       if (!user) {
-          return res.status(400).json({ error: 'Invalid email or password' });
+        return res.render('login', { error: 'No user' });
       }
 
       if (password !== user.password) {
-          return res.status(400).json({ error: 'Invalid email or password' });
+        return res.render('login', { error: 'Invalid email or password' });
       }
 
       req.session.user = user; // Set user in session
@@ -117,6 +150,7 @@ app.post('/login', async (req, res) => {
   } catch (error) {
       console.error('Error during login:', error.message);
       res.status(500).json({ error: 'Server error' });
+
   }
 });
 
@@ -134,57 +168,108 @@ app.listen(port, () => {
     console.log(`Server running on port: ${port}`);
 });
 
-// Add Dress Route
-app.post('/add-dress', async (req, res) => {
-  // Check if the user is logged in
+app.post('/add-topwear', async (req, res) => {
   if (!req.session.user) {
-      return res.status(401).json({ error: 'You must be logged in to add a dress.' });
+    return res.status(401).json({ error: 'You must be logged in to add a dress.' });
   }
 
-  const dress = req.body.dress;
-  const userId = req.session.user._id; // Get the user's ID from the session
+  const { topwear } = req.body;
+  const userId = req.session.user._id;
 
   try {
-      // Find the user by ID and add the dress to their collection
-      await User.findByIdAndUpdate(userId, { $push: { dresses: dress } });
-      // Optionally update session user with latest dresses
-      const updatedUser = await User.findById(userId); 
-      req.session.user = updatedUser; // Update session with the new data
-      res.redirect('/'); // Redirect to the home page after adding the dress
+    const user = await User.findById(userId);
+
+    // Check if the dress already exists
+    if (user.Topwear.includes(topwear)) {
+      req.session.message = { type: 'error', text: 'You already have this dress in your wardrobe.' };
+      return res.redirect('/wardrobe');
+    }
+
+    // Add the dress if it's not a duplicate
+    user.Topwear.push(topwear);
+    await user.save();
+
+    req.session.message = { type: 'success', text: 'Dress added successfully!' };
+    return res.redirect('/');
   } catch (error) {
-      console.error('Error adding dress:', error.message);
+    console.error('Error adding dress:', error.message);
+    req.session.message = { type: 'error', text: 'Server error. Please try again later.' };
+    return res.redirect('/');
+  }
+});
+
+app.post('/add-bottomwear', async (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ error: 'You must be logged in to add a dress.' });
+  }
+
+  const { bottomwear } = req.body;
+  const userId = req.session.user._id;
+
+  try {
+    const user = await User.findById(userId);
+
+    // Check if the dress already exists
+    if (user.Bottomwear.includes(bottomwear)) {
+      req.session.message = { type: 'error', text: 'You already have this dress in your wardrobe.' };
+      return res.redirect('/');
+    }
+
+    // Add the dress if it's not a duplicate
+    user.Bottomwear.push(bottomwear);
+    await user.save();
+
+    req.session.message = { type: 'success', text: 'Dress added successfully!' };
+    return res.redirect('/');
+  } catch (error) {
+    console.error('Error adding dress:', error.message);
+    req.session.message = { type: 'error', text: 'Server error. Please try again later.' };
+    return res.redirect('/');
+  }
+});
+
+
+
+  app.post('/add-accessory', async (req, res) => {
+    const { accessory } = req.body;
+    const userId = req.session.user._id;
+  
+    try {
+      const user = await User.findById(userId);
+      // Check if the accessory already exists
+      if (user.accessories.includes(accessory)) {
+        return res.status(400).json({ error: 'You already have this accessory in your wardrobe.' });
+      }
+  
+      user.accessories.push(accessory);
+      await user.save();
+      res.redirect('/');
+    } catch (error) {
+      console.error('Error adding accessory:', error.message);
       res.status(500).json({ error: 'Server error. Please try again later.' });
-  }
-});
-
-// Add Accessory Route
-app.post('/add-accessory', async (req, res) => {
-  const { accessory } = req.body;
-  const userId = req.session.user._id;
-
-  try {
-    await User.findByIdAndUpdate(userId, { $push: { accessories: accessory } });
-    res.redirect('/');
-  } catch (error) {
-    console.error('Error adding accessory:', error.message);
-    res.status(500).json({ error: 'Server error. Please try again later.' });
-  }
-});
-
-// Add Personal Item Route
-app.post('/add-item', async (req, res) => {
-  const { personalItem } = req.body;
-  const userId = req.session.user._id;
-
-  try {
-    await User.findByIdAndUpdate(userId, { $push: { personalItems: personalItem } });
-    res.redirect('/');
-  } catch (error) {
-    console.error('Error adding personal item:', error.message);
-    res.status(500).json({ error: 'Server error. Please try again later.' });
-  }
-});
-
+    }
+  });
+  
+  app.post('/add-item', async (req, res) => {
+    const { personalItem } = req.body;
+    const userId = req.session.user._id;
+  
+    try {
+      const user = await User.findById(userId);
+      // Check if the personal item already exists
+      if (user.personalItems.includes(personalItem)) {
+        return res.status(400).json({ error: 'You already have this item in your collection.' });
+      }
+  
+      user.personalItems.push(personalItem);
+      await user.save();
+      res.redirect('/');
+    } catch (error) {
+      console.error('Error adding personal item:', error.message);
+      res.status(500).json({ error: 'Server error. Please try again later.' });
+    }
+  });
+  
 // Express route handler for wearing an item
 app.post('/wear-item', (req, res) => {
   const { type, item } = req.body;
@@ -214,3 +299,72 @@ app.post('/wear-item', (req, res) => {
           res.status(500).json({ error: 'Internal Server Error' });
       });
 });
+
+
+
+//community
+// Community Engage Page
+app.get('/community', async (req, res) => {
+  try {
+      const posts = await CommunityPost.find().sort({ createdAt: -1 }); // Fetch posts sorted by latest first
+      res.render('community', { user: req.session.user, posts });
+  } catch (error) {
+      console.error('Error fetching community posts:', error.message);
+      res.status(500).json({ error: 'Server error. Please try again later.' });
+  }
+});
+
+// Post a new community message
+app.post('/community/post', async (req, res) => {
+  if (!req.session.user) {
+      return res.status(401).json({ error: 'You must be logged in to post.' });
+  }
+
+  const { text } = req.body;
+  const username = req.session.user.username;
+
+  try {
+      const newPost = new CommunityPost({ username, text });
+      await newPost.save();
+      res.redirect('/community');
+  } catch (error) {
+      console.error('Error posting message:', error.message);
+      res.status(500).json({ error: 'Server error. Please try again later.' });
+  }
+});
+
+// Reply to a community post
+app.post('/community/reply/:postId', async (req, res) => {
+  const { text } = req.body;
+  const username = req.session.user.username;
+  const postId = req.params.postId;
+
+  try {
+      const post = await CommunityPost.findById(postId);
+      if (!post) {
+          return res.status(404).json({ error: 'Post not found.' });
+      }
+      post.replies.push({ username, text });
+      await post.save();
+      res.redirect('/community');
+  } catch (error) {
+      console.error('Error replying to post:', error.message);
+      res.status(500).json({ error: 'Server error. Please try again later.' });
+  }
+});
+const orphanages = [
+  { name: 'Orphanage A', address: '123 Main St, City' },
+  { name: 'Orphanage B', address: '456 Elm St, City' },
+  { name: 'Orphanage C', address: '789 Pine St, City' }
+];
+
+app.get('/api/orphanages', (req, res) => {
+  const { lat, lng } = req.query;
+
+  res.json(orphanages);
+});
+
+// Route to render the donate page
+app.get('/donate', (req, res) => {
+  res.render('donate');
+})
