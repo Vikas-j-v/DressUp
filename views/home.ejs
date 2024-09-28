@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DressUp - Organize Your Wardrobe Smartly</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+    <style>
+        /* Additional hover effect for links */
+        .nav-link {
+            transition: color 0.3s, background-color 0.3s;
+        }
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="bg-gradient-to-r from-blue-600 to-blue-800 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo and Links -->
+                <div class="flex items-center">
+                    <!-- Logo -->
+                    <div class="shrink-0">
+                        <img class="h-10 w-auto" src="logo.png" alt="Logo">
+                    </div>
+                    <!-- Links (moved left) -->
+                    <div class="ml-10 space-x-8 hidden sm:flex">
+                        <a href="#" class="nav-link text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                        <a href="#" class="nav-link text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">About Us</a>
+                        <a href="#" class="nav-link text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Products</a>
+                        <a href="#" class="nav-link text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Contacts</a>
+                    </div>
+                </div>
+
+                <!-- User Actions (Login, Signup) -->
+                <div class="hidden sm:flex sm:items-center">
+                    <a href="/login" class="nav-link text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium transition">Login</a>
+                    <a href="/signup" class="bg-white text-blue-600 hover:bg-blue-500 hover:text-white border border-white px-4 py-2 rounded-md text-sm font-medium ml-4 transition">Sign Up</a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="sm:hidden">
+                    <button id="mobile-menu-button" type="button" class="text-gray-300 hover:text-white focus:outline-none">
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden sm:hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="#" class="block text-white hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium">Home</a>
+                <a href="#" class="block text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium">About Us</a>
+                <a href="#" class="block text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium">Products</a>
+                <a href="#" class="block text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium">Contacts</a>
+                <a href="/login" class="block text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium">Login</a>
+                <a href="/signup" class="block bg-white text-blue-600 hover:bg-blue-500 hover:text-white px-3 py-2 rounded-md text-base font-medium">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="bg-white py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl font-bold text-blue-800">Welcome to DressUp</h1>
+            <p class="mt-4 text-lg text-gray-700 max-w-3xl mx-auto">
+                Meet Ravi, a young professional in a bustling city. Over the years, Ravi has collected numerous clothes and accessories, but his growing wardrobe has become a challenge to manage. He often buys items he already owns, while some favorites get lost in the clutter. Like many, he wonders how to make more sustainable choices with his possessions.
+            </p>
+            <p class="mt-4 text-lg text-gray-700 max-w-3xl mx-auto">
+                At <strong>DressUp</strong>, we help people like Ravi simplify wardrobe management, reduce overconsumption, and make sustainable lifestyle choices. Whether you want to track how often you use items, plan outfits without the mess, or discover better ways to care for your clothes, we've got you covered.
+            </p>
+            <a href="/signup" class="mt-8 inline-block bg-blue-600 text-white px-6 py-3 rounded-md text-lg font-medium hover:bg-blue-700 transition">Get Started Today</a>
+        </div>
+    </section>
+
+    <!-- Key Features -->
+    <section class="bg-gray-50 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl font-semibold text-gray-800">How DressUp Helps You</h2>
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <img src="icon-organize.svg" alt="Organize" class="mx-auto mb-4 h-16 w-16">
+                    <h3 class="text-xl font-bold text-blue-600">Organize Your Wardrobe</h3>
+                    <p class="mt-2 text-gray-600">Easily sort, categorize, and access your belongings, from daily essentials to special occasion outfits.</p>
+                </div>
+                <!-- Feature 2 -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <img src="icon-outfits.svg" alt="Outfits" class="mx-auto mb-4 h-16 w-16">
+                    <h3 class="text-xl font-bold text-blue-600">Plan Outfits Effortlessly</h3>
+                    <p class="mt-2 text-gray-600">Create outfits without the mess and get suggestions for items you haven't worn in a while.</p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <img src="icon-sustainability.svg" alt="Sustainability" class="mx-auto mb-4 h-16 w-16">
+                    <h3 class="text-xl font-bold text-blue-600">Make Sustainable Choices</h3>
+                    <p class="mt-2 text-gray-600">Track usage and discover eco-friendly tips to reduce waste and make the most of what you already own.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white shadow-md py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center">
+                <p class="text-gray-500">© 2024 DressUp. All rights reserved.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-500 hover:text-blue-500">Privacy Policy</a>
+                    <a href="#" class="text-gray-500 hover:text-blue-500">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script for Dropdown -->
+    <script>
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+
+    <script>
+        // Check if the URL contains 'signup=success'
+        const queryParams = new URLSearchParams(window.location.search);
+        if (queryParams.get('signup') === 'success') {
+            alert('Signup successful! Welcome to the platform.');
+        }
