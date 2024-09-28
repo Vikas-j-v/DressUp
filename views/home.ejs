@@ -8,13 +8,23 @@
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 
     <style>
-        /* Additional hover effect for links */
         .nav-link {
             transition: color 0.3s, background-color 0.3s;
         }
         .nav-link:hover {
             background-color: rgba(255, 255, 255, 0.2);
             color: #ffffff;
+        }
+        /* Full height body and html to allow footer to stick */
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        /* Flex-grow for main content to push footer down */
+        main {
+            flex: 1;
         }
     </style>
 </head>
@@ -32,18 +42,25 @@
                     </div>
                     <!-- Links (moved left) -->
                     <div class="ml-10 space-x-8 hidden sm:flex">
-                        <a href="#" class="nav-link text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Home</a>
-                        <a href="#" class="nav-link text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">About Us</a>
-                        <a href="#" class="nav-link text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Products</a>
+                        <a href="/" class="nav-link text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                        <a href="/about" class="nav-link text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">About Us</a>
+                        <a href="/wardrobe" class="nav-link text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">YourCollections</a>
                         <a href="#" class="nav-link text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Contacts</a>
                     </div>
                 </div>
 
-                <!-- User Actions (Login, Signup) -->
+                <!-- User Actions -->
                 <div class="hidden sm:flex sm:items-center">
-                    <a href="/login" class="nav-link text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium transition">Login</a>
-                    <a href="/signup" class="bg-white text-blue-600 hover:bg-blue-500 hover:text-white border border-white px-4 py-2 rounded-md text-sm font-medium ml-4 transition">Sign Up</a>
+                    <% if (user) { %> <!-- Check if user is logged in -->
+                        <span class="text-gray-200 px-3 py-2 rounded-md text-sm font-medium">Hello, <%= user.username %></span>
+                        <a href="/logout" class="bg-white text-blue-600 hover:bg-blue-500 hover:text-white border border-white px-4 py-2 rounded-md text-sm font-medium ml-4 transition">Logout</a>
+                    <% } else { %> <!-- Show login/signup for guests -->
+                        <a href="/login" class="bg-white text-blue-600 hover:bg-blue-500 hover:text-white border border-white px-4 py-2 rounded-md text-sm font-medium">Login</a>
+                        <a href="/signup" class="ml-4 bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium">Sign Up</a>
+                    <% } %>
                 </div>
+                
+
 
                 <!-- Mobile menu button -->
                 <div class="sm:hidden">
@@ -59,59 +76,75 @@
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden sm:hidden">
             <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="#" class="block text-white hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium">Home</a>
-                <a href="#" class="block text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium">About Us</a>
-                <a href="#" class="block text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium">Products</a>
-                <a href="#" class="block text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium">Contacts</a>
-                <a href="/login" class="block text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium">Login</a>
-                <a href="/signup" class="block bg-white text-blue-600 hover:bg-blue-500 hover:text-white px-3 py-2 rounded-md text-base font-medium">Sign Up</a>
+                <a href="/" class="block text-white hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium">Home</a>
+                <a href="/about" class="block text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium">About Us</a>
+                <a href="/wardrobe" class="block text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium">Products</a>
+                <a href="/contact" class="block text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium">Contacts</a>
+                <% if (user) { %> 
+                    <a href="/logout" class="block bg-white text-blue-600 hover:bg-blue-500 hover:text-white px-3 py-2 rounded-md text-base font-medium">Logout</a>
+                <% } else { %>
+                    <a href="/login" class="block text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium">Login</a>
+                    <a href="/signup" class="block bg-white text-blue-600 hover:bg-blue-500 hover:text-white px-3 py-2 rounded-md text-base font-medium">Sign Up</a>
+                <% } %>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="bg-white py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 class="text-4xl font-bold text-blue-800">Welcome to DressUp</h1>
-            <p class="mt-4 text-lg text-gray-700 max-w-3xl mx-auto">
-                Meet Ravi, a young professional in a bustling city. Over the years, Ravi has collected numerous clothes and accessories, but his growing wardrobe has become a challenge to manage. He often buys items he already owns, while some favorites get lost in the clutter. Like many, he wonders how to make more sustainable choices with his possessions.
-            </p>
-            <p class="mt-4 text-lg text-gray-700 max-w-3xl mx-auto">
-                At <strong>DressUp</strong>, we help people like Ravi simplify wardrobe management, reduce overconsumption, and make sustainable lifestyle choices. Whether you want to track how often you use items, plan outfits without the mess, or discover better ways to care for your clothes, we've got you covered.
-            </p>
-            <a href="/signup" class="mt-8 inline-block bg-blue-600 text-white px-6 py-3 rounded-md text-lg font-medium hover:bg-blue-700 transition">Get Started Today</a>
-        </div>
-    </section>
+    <!-- Main Content -->
+    <main>
+        <section class="bg-white py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h1 class="text-4xl font-bold text-blue-800">Welcome to DressUp</h1>
+                <p class="mt-4 text-lg text-gray-700 max-w-3xl mx-auto">
+                    Many individuals accumulate numerous clothes and accessories over time, making it increasingly difficult to manage their wardrobes. Often, they end up buying items they already own, while some of their favorite pieces remain unused and buried under the clutter. Additionally, there’s a growing concern about making more sustainable choices with personal possessions.
+                </p>
+                <p class="mt-4 text-lg text-gray-700 max-w-3xl mx-auto">
+                    At <strong>DressUp</strong>, we help simplify wardrobe management, reduce overconsumption, and promote sustainable lifestyle choices. Whether you want to track how often you use items, plan outfits without the hassle, or discover better ways to care for your clothes, we’ve got you covered.
+                </p>
+                
+                <% if (!user) { %>
+                    <a href="/signup" class="mt-8 inline-block bg-blue-600 text-white px-6 py-3 rounded-md text-lg font-medium hover:bg-blue-700 transition">Get Started Today</a>
+                <% } %>
+        </section>
 
-    <!-- Key Features -->
-    <section class="bg-gray-50 py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-3xl font-semibold text-gray-800">How DressUp Helps You</h2>
-            <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Feature 1 -->
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <img src="icon-organize.svg" alt="Organize" class="mx-auto mb-4 h-16 w-16">
-                    <h3 class="text-xl font-bold text-blue-600">Organize Your Wardrobe</h3>
-                    <p class="mt-2 text-gray-600">Easily sort, categorize, and access your belongings, from daily essentials to special occasion outfits.</p>
-                </div>
-                <!-- Feature 2 -->
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <img src="icon-outfits.svg" alt="Outfits" class="mx-auto mb-4 h-16 w-16">
-                    <h3 class="text-xl font-bold text-blue-600">Plan Outfits Effortlessly</h3>
-                    <p class="mt-2 text-gray-600">Create outfits without the mess and get suggestions for items you haven't worn in a while.</p>
-                </div>
-                <!-- Feature 3 -->
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <img src="icon-sustainability.svg" alt="Sustainability" class="mx-auto mb-4 h-16 w-16">
-                    <h3 class="text-xl font-bold text-blue-600">Make Sustainable Choices</h3>
-                    <p class="mt-2 text-gray-600">Track usage and discover eco-friendly tips to reduce waste and make the most of what you already own.</p>
-                </div>
+        <!-- Add Dress Section (only for logged-in users) -->
+        <% if (user) { %>
+        <section class="bg-gray-50 py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-semibold text-gray-800 ">Bought Anything New</h2>
+                
+                <!-- Add a Dress Form -->
+                <form action="/add-dress" method="POST" class="mt-8 flex">
+                    <input type="text" name="dress" placeholder="Enter Dress Name" class="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 w-full sm:w-auto">
+                    <button type="submit" class="mt-2 sm:mt-0 sm:ml-4 bg-blue-600 text-white px-4 py-2 rounded-md">Add Dress</button>
+                </form>
+
+                <form action="/add-accessory" method="POST" class="mt-4">
+                    <input type="text" name="accessory" placeholder="Add New Accessory" class="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-md">
+                    <button type="submit" class="mt-2 sm:mt-0 sm:ml-4 bg-blue-600 text-white px-4 py-2 rounded-md">Add Accessory</button>
+                </form>
+
+                <form action="/add-item" method="POST" class="mt-4">
+                    <input type="text" name="personalItem" placeholder="Add New Personal Item" class="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-md">
+                    <button type="submit" class="mt-2 sm:mt-0 sm:ml-4 bg-blue-600 text-white px-4 py-2 rounded-md">Add Item</button>
+                </form>
             </div>
-        </div>
-    </section>
+        </section>
+        <% } %>
+    </main>
 
+    <!-- Script for Dropdown -->
+    <script>
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+    
     <!-- Footer -->
-    <footer class="bg-white shadow-md py-8">
+    <footer class="bg-white shadow-md py-8 w-full">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center">
                 <p class="text-gray-500">© 2024 DressUp. All rights reserved.</p>
@@ -123,19 +156,5 @@
         </div>
     </footer>
 
-    <!-- Script for Dropdown -->
-    <script>
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-    </script>
-
-    <script>
-        // Check if the URL contains 'signup=success'
-        const queryParams = new URLSearchParams(window.location.search);
-        if (queryParams.get('signup') === 'success') {
-            alert('Signup successful! Welcome to the platform.');
-        }
+</body>
+</html>

@@ -1,24 +1,29 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
 
 // Create User Schema
 const userSchema = new mongoose.Schema({
-    username: { type: String, required: true, unique: true },
+    username: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true }
+    password: { type: String, required: true },
+    dresses: { type: [String], required:true, default: [] },
+    accessories: { type: [String], required:true, default: [] },
+    personalItems: { type: [String], required:true, default: [] }
 });
 
-// Hash password before saving user
-userSchema.pre('save', async function (next) {
-    if (!this.isModified('password')) return next();
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-});
-
-// Match the entered password with the hashed password
 userSchema.methods.matchPassword = async function (enteredPassword) {
-    return await bcrypt.compare(enteredPassword, this.password);
+    return enteredPassword === this.password;
+};
+
+// Add a dress to the user's collection
+userSchema.methods.addDress = async function (dress) {
+    this.dresses.push(dress);
+    await this.save(); // Save after adding the dress
+};
+
+// Remove a dress from the user's collection (optional)
+userSchema.methods.removeDress = async function (dress) {
+    this.dresses = this.dresses.filter(d => d !== dress);
+    await this.save(); // Save after removing the dress
 };
 
 const User = mongoose.model('User', userSchema);
