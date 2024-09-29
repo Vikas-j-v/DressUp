@@ -8,24 +8,74 @@
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 </head>
 <body class="bg-gray-100">
-    <nav class="bg-gradient-to-r from-blue-600 to-blue-800 text-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <div class="flex items-center">
-                    <div class="shrink-0">
-                        <img class="h-12 w-auto" src="/images/logo.png" alt="DressUp">
+ <!-- Navbar -->
+ <nav class="bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <div class="flex items-center">
+                <div class="shrink-0">
+                    <img class="h-12 w-auto" src="/images/logo.jpg" alt="DressUp">
+                </div>
+                <div class="ml-10 space-x-8 hidden sm:flex">
+                    <a href="/" class="nav-link text-white hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium font-bold">Home</a>
+                    <a href="/wardrobe" class="nav-link text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium font-bold">Your Collections</a>
+                    <a href="/community" class="nav-link text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium font-bold">Community Engage</a>
+                    <a href="/donate" class="nav-link text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium font-bold">Donate</a>
+                    <div class="relative">
+                        <button id="dropdown-button" class="nav-link text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium font-bold">Eco-Friendly</button>
+                        <div id="dropdown-menu" class="absolute hidden bg-white shadow-md rounded-md mt-1 z-10">
+                            <a href="/ecofriendly" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Tips</a>
+                            <a href="/reuse" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Reuse</a>
+                            <a href="/recycle" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Recycle</a>
+                        </div>
                     </div>
-                    <div class="ml-10 space-x-8 hidden sm:flex">
-                        <a href="/" class="nav-link text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Home</a>
-                        <a href="/wardrobe" class="nav-link text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Your Collections</a>
-                        <a href="/community" class="nav-link text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium">Community Engage</a>
-                        <a href="/logout" class="bg-white text-blue-600 hover:bg-blue-500 hover:text-white border border-white px-4 py-2 rounded-md text-sm font-medium">Logout</a>
-                    </div>
+                    <a href="/contact" class="nav-link text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium font-bold">Contacts</a>
                 </div>
             </div>
-        </div>
-    </nav>
+            <div class="hidden sm:flex sm:items-center">
+                <% if (user) { %> 
+                    <span class="text-gray-200 px-3 py-2 rounded-md text-sm font-medium font-bold">Hello, <%= user.username %></span>
+                    <a href="/logout" class="bg-white text-blue-600 hover:bg-blue-500 hover:text-white border border-white px-4 py-2 rounded-md text-sm font-medium ml-4 transition font-bold">Logout</a>
+                <% } else { %>
+                    <a href="/login" class="bg-white text-blue-600 hover:bg-blue-500 hover:text-white border border-white px-4 py-2 rounded-md text-sm font-medium font-bold">Login</a>
+                    <a href="/signup" class="ml-4 bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium font-bold">Sign Up</a>
+                <% } %>
+            </div>
 
+            <div class="sm:hidden">
+                <button id="mobile-menu-button" type="button" class="text-gray-300 hover:text-white focus:outline-none">
+                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="mobile-menu" class="hidden sm:hidden">
+        <div class="px-2 pt-2 pb-3 space-y-1">
+            <a href="/" class="block text-white hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium font-bold">Home</a>
+            <a href="/wardrobe" class="block text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium font-bold">Your Collections</a>
+            <a href="/community" class="block text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium font-bold">CommunityEngage</a>
+            <a href="/donate" class="block text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium font-bold">Donate</a>
+            <div class="relative">
+                <button id="dropdown-button" class="nav-link text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium font-bold">Eco-Friendly</button>
+                <div id="dropdown-menu" class="absolute hidden bg-white shadow-md rounded-md mt-1 z-10">
+                    <a href="/ecofriendly" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Tips</a>
+                    <a href="/reuse" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Reuse</a>
+                    <a href="/recycle" class="block px-4 py-2 text-gray-700 hover:bg-gray-200">Recycle</a>
+                </div>
+            </div>
+            <a href="/contact" class="block text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium font-bold">Contacts</a>
+            <% if (user) { %> 
+                <a href="/logout" class="block bg-white text-blue-600 hover:bg-blue-500 hover:text-white px-3 py-2 rounded-md text-base font-medium font-bold">Logout</a>
+            <% } else { %>
+                <a href="/login" class="block text-gray-200 hover:bg-blue-700 px-3 py-2 rounded-md text-base font-medium font-bold">Login</a>
+                <a href="/signup" class="block bg-white text-blue-600 hover:bg-blue-500 hover:text-white px-3 py-2 rounded-md text-base font-medium font-bold">Sign Up</a>
+            <% } %>
+        </div>
+    </div>
+</nav>
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h1 class="text-3xl font-bold mb-6">Community Engagement</h1>
 
