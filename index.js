@@ -26,6 +26,8 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, 'public')));
+
 
 mongoose.connect('mongodb+srv://vikasjv68:Ziy9JYog3OYo3VCA@bitnbuild.vaee0.mongodb.net/?retryWrites=true&w=majority&appName=bitnbuild', {
     useNewUrlParser: true,
@@ -181,8 +183,10 @@ app.post('/add-topwear', async (req, res) => {
 
     // Check if the dress already exists
     if (user.Topwear.includes(topwear)) {
-      req.session.message = { type: 'error', text: 'You already have this dress in your wardrobe.' };
-      return res.redirect('/wardrobe');
+      // res.render('home', { error: 'You already have this item' });
+      // req.session.message = { type: 'error', text: 'You already have this dress in your wardrobe.' };
+      // return res.redirect('/wardrobe');
+      return res.status(401).json({ error: 'You already have this' })
     }
 
     // Add the dress if it's not a duplicate
@@ -368,3 +372,7 @@ app.get('/api/orphanages', (req, res) => {
 app.get('/donate', (req, res) => {
   res.render('donate');
 })
+
+app.get('/contact', (req, res) => {
+  res.render('contact'); // Renders the 'contact.ejs' file
+});
